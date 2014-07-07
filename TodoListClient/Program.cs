@@ -97,9 +97,9 @@ namespace TodoListClient
             string message = ex.Message;
             if (ex.InnerException != null)
             {
-                message += "Inner Exception : " + ex.InnerException.Message;
+                message += Environment.NewLine + "Inner Exception : " + ex.InnerException.Message;
             }
-            Console.WriteLine("Message");
+            Console.WriteLine("Message: {0}",message);
         }
 
         // Obscure the password being entered
