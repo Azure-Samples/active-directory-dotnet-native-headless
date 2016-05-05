@@ -86,7 +86,7 @@ namespace TodoListClient
             Console.WriteLine("Password>");
             string password = ReadPasswordFromConsole();
             Console.WriteLine("");
-            return new UserCredential(user, password);
+            return new UserPasswordCredential(user, password);
         }
 
         // Display exceptions text on the console
@@ -139,33 +139,37 @@ namespace TodoListClient
             // first, try to get a token silently
             try
             {
-                result = authContext.AcquireTokenSilent(todoListResourceId, clientId);
+                result = authContext.AcquireTokenSilentAsync(todoListResourceId, clientId).Result;
             }
-            catch (AdalException ex)
+            catch (AggregateException exc)
             {
+                AdalException ex = exc.InnerException as AdalException;
+
                 // There is no token in the cache; prompt the user to sign-in.
-                if (ex.ErrorCode == "failed_to_acquire_token_silently")
-                {
-                    UserCredential uc = TextualPrompt();
-                    // if you want to use Windows integrated auth, comment the line above and uncomment the one below
-                    // UserCredential uc = new UserCredential();
-                    try
-                    {
-                        result = authContext.AcquireToken(todoListResourceId, clientId, uc);
-                    }
-                    catch (Exception ee)
-                    {
-                        ShowError(ee);
-                        return;
-                    }
-                }
-                else
+                if (ex != null && ex.ErrorCode != "failed_to_acquire_token_silently")
                 {
                     // An unexpected error occurred.
                     ShowError(ex);
                     return;
                 }
             }
+
+            if (result == null)
+            {
+                UserCredential uc = TextualPrompt();
+                // if you want to use Windows integrated auth, comment the line above and uncomment the one below
+                // UserCredential uc = new UserCredential();
+                try
+                {
+                    result = authContext.AcquireTokenAsync(todoListResourceId, clientId, uc).Result;
+                }
+                catch (Exception ee)
+                {
+                    ShowError(ee);
+                    return;
+                }
+            }
+
             #endregion
 
             #region Call Web API
@@ -208,36 +212,40 @@ namespace TodoListClient
         {
             #region Obtain token
             AuthenticationResult result = null;
-            // first, try to get a token silently            
+            // first, try to get a token silently
             try
             {
-                result = authContext.AcquireTokenSilent(todoListResourceId, clientId);
+                result = authContext.AcquireTokenSilentAsync(todoListResourceId, clientId).Result;
             }
-            catch (AdalException ex)
+            catch (AggregateException exc)
             {
-                // There is no access token in the cache, so prompt the user to sign-in.
-                if (ex.ErrorCode == "failed_to_acquire_token_silently")
-                {
-                    UserCredential uc = TextualPrompt();
-                    // if you want to use Windows integrated auth, comment the line above and uncomment the one below
-                    // UserCredential uc = new UserCredential();
-                    try
-                    {
-                        result = authContext.AcquireToken(todoListResourceId, clientId, uc);                        
-                    }
-                    catch (Exception ee)
-                    {
-                        ShowError(ee);
-                        return;
-                    }
-                }
-                else
+                AdalException ex = exc.InnerException as AdalException;
+
+                // There is no token in the cache; prompt the user to sign-in.
+                if (ex != null && ex.ErrorCode != "failed_to_acquire_token_silently")
                 {
                     // An unexpected error occurred.
                     ShowError(ex);
                     return;
                 }
             }
+
+            if (result == null)
+            {
+                UserCredential uc = TextualPrompt();
+                // if you want to use Windows integrated auth, comment the line above and uncomment the one below
+                // UserCredential uc = new UserCredential();
+                try
+                {
+                    result = authContext.AcquireTokenAsync(todoListResourceId, clientId, uc).Result;
+                }
+                catch (Exception ee)
+                {
+                    ShowError(ee);
+                    return;
+                }
+            }
+
             #endregion
 
             #region Call Web API
