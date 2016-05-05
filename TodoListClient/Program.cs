@@ -86,7 +86,7 @@ namespace TodoListClient
             Console.WriteLine("Password>");
             string password = ReadPasswordFromConsole();
             Console.WriteLine("");
-            return new UserCredential(user, password);
+            return new UserPasswordCredential(user, password);
         }
 
         // Display exceptions text on the console
@@ -132,19 +132,21 @@ namespace TodoListClient
         #region Commands
         // List all the ToDos for the current user.
         // If there is no valid token available, obtain a new one.
-        static async void ListTodo()
+        static void ListTodo()
         {
             #region Obtain token
             AuthenticationResult result = null;
             // first, try to get a token silently
             try
             {
-                result = await authContext.AcquireTokenSilentAsync(todoListResourceId, clientId);
+                result = authContext.AcquireTokenSilentAsync(todoListResourceId, clientId).Result;
             }
-            catch (AdalException ex)
+            catch (AggregateException exc)
             {
+                AdalException ex = exc.InnerException as AdalException;
+
                 // There is no token in the cache; prompt the user to sign-in.
-                if (ex.ErrorCode != "failed_to_acquire_token_silently")
+                if (ex != null && ex.ErrorCode != "failed_to_acquire_token_silently")
                 {
                     // An unexpected error occurred.
                     ShowError(ex);
@@ -159,7 +161,7 @@ namespace TodoListClient
                 // UserCredential uc = new UserCredential();
                 try
                 {
-                    result = await authContext.AcquireTokenAsync(todoListResourceId, clientId, uc);
+                    result = authContext.AcquireTokenAsync(todoListResourceId, clientId, uc).Result;
                 }
                 catch (Exception ee)
                 {
@@ -206,19 +208,21 @@ namespace TodoListClient
         }
         // Add a new ToDo in the list of the current user.
         // If there is no valid token available, obtain a new one.
-        static async void AddTodo()
+        static void AddTodo()
         {
             #region Obtain token
             AuthenticationResult result = null;
             // first, try to get a token silently
             try
             {
-                result = await authContext.AcquireTokenSilentAsync(todoListResourceId, clientId);
+                result = authContext.AcquireTokenSilentAsync(todoListResourceId, clientId).Result;
             }
-            catch (AdalException ex)
+            catch (AggregateException exc)
             {
+                AdalException ex = exc.InnerException as AdalException;
+
                 // There is no token in the cache; prompt the user to sign-in.
-                if (ex.ErrorCode != "failed_to_acquire_token_silently")
+                if (ex != null && ex.ErrorCode != "failed_to_acquire_token_silently")
                 {
                     // An unexpected error occurred.
                     ShowError(ex);
@@ -233,7 +237,7 @@ namespace TodoListClient
                 // UserCredential uc = new UserCredential();
                 try
                 {
-                    result = await authContext.AcquireTokenAsync(todoListResourceId, clientId, uc);
+                    result = authContext.AcquireTokenAsync(todoListResourceId, clientId, uc).Result;
                 }
                 catch (Exception ee)
                 {
@@ -243,7 +247,6 @@ namespace TodoListClient
             }
 
             #endregion
-
 
             #region Call Web API
             Console.WriteLine("Enter new todo description >");
