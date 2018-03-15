@@ -36,7 +36,11 @@ From your shell or command line:
 
 `git clone https://github.com/Azure-Samples/active-directory-dotnet-native-headless.git`
 
-### Step 2:  Register the sample with your Azure Active Directory tenant
+### Step 2:  Register the sample with your Azure Active Directory tenant and configure the code accordingly
+
+There are two options:
+ - Option 1: you run the `Configure.ps1` PowerShell script which creates two applications in the Azure Active Directory, (one for the client and one for the service), and then updates the configuration files in the Visual Studio projects to point to those two newly created apps.
+ - Option 2: you do the same manually.
 
 There are two projects in this sample.  Each needs to be separately registered in your Azure AD tenant.
 
