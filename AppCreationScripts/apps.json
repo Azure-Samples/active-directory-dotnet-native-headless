@@ -18,6 +18,9 @@
           "Resource": "service",
           "DelegatedPermissions": [ "user_impersonation" ]
         }
+      ],
+      "ManualSteps": [
+        { "Comment":"click Settings > Required permissions > Grant Permissions"}
       ]
     }
   ],
