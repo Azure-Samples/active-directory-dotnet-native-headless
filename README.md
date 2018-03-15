@@ -2,23 +2,33 @@
 services: active-directory
 platforms: dotnet
 author: jmprieur
+level: 300
+client: .NET Framework 4.6.1 console 
+service: .NET Framework 4.6.1 web api
+endpoint: AAD V1
 ---
-
 # Authenticating to Azure AD non-interactively using a username & password
+## About this sample
+### Scenario
+This sample demonstrates a .Net console application calling a web API that is secured using Azure AD. The .Net application uses the Active Directory Authentication Library (ADAL) to obtain a JWT access token through the OAuth 2.0 protocol. The access token is sent to the web API to authenticate the user. This sample shows you how to use ADAL to authenticate users via raw credentials (username and password, or Windows integrated authentication) via a text-only interface. More information is available in the ADAL.NET conceptual documentation in [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password) and [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
 
-This sample demonstrates a .Net console application calling a web API that is secured using Azure AD. The .Net application uses the Active Directory Authentication Library (ADAL) to obtain a JWT access token through the OAuth 2.0 protocol. The access token is sent to the web API to authenticate the user. This sample shows you how to use ADAL to authenticate users via raw credentials (username and password, or Windows integrated authentication) via a text-only interface.
-
+### More information
 For more information about how the protocols work in this scenario and other scenarios, see [Authentication Scenarios for Azure AD](https://azure.microsoft.com/documentation/articles/active-directory-authentication-scenarios/).
 
 > Looking for previous versions of this code sample? Check out the tags on the [releases](../../releases) GitHub page.
 
 ## How To Run This Sample
 
+>[!Note] If you want to run this sample on **Azure Government**, navigate to the "Azure Government Deviations" section at the bottom of this page.
+>
+>
+>
+
 To run this sample you will need:
-- Visual Studio 2013
+- [Visual Studio 2017](https://aka.ms/vsdownload)
 - An Internet connection
 - An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, please see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/) 
-- A user account in your Azure AD tenant. This sample will not work with a Microsoft account, so if you signed in to the Azure portal with a Microsoft account and have never created a user account in your directory before, you need to do that now.
+- A user account in your Azure AD tenant. This sample will not work with a Microsoft account, so if you signed in to the Azure portal with a Microsoft account and have never created a user account in your directory before, you need to do that now. This sample will not work with a Microsoft account (formerly Windows Live account).
 
 ### Step 1:  Clone or download this repository
 
@@ -26,7 +36,11 @@ From your shell or command line:
 
 `git clone https://github.com/Azure-Samples/active-directory-dotnet-native-headless.git`
 
-### Step 2:  Register the sample with your Azure Active Directory tenant
+### Step 2:  Register the sample with your Azure Active Directory tenant and configure the code accordingly
+
+There are two options:
+ - Option 1: you run the `Configure.ps1` PowerShell script which creates two applications in the Azure Active Directory, (one for the client and one for the service), and then updates the configuration files in the Visual Studio projects to point to those two newly created apps.
+ - Option 2: you do the same manually.
 
 There are two projects in this sample.  Each needs to be separately registered in your Azure AD tenant.
 
@@ -34,30 +48,31 @@ There are two projects in this sample.  Each needs to be separately registered i
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant where you wish to register your application.
-3. Click on **More Services** in the left hand nav, and choose **Azure Active Directory**.
-4. Click on **App registrations** and choose **Add**.
-5. Enter a friendly name for the application, for example 'TodoListService' and select 'Web Application and/or Web API' as the Application Type. For the sign-on URL, enter the base URL for the sample, which is by default `https://localhost:44321`. Click on **Create** to create the application.
-6. While still in the Azure portal, choose your application, click on **Settings** and choose **Properties**.
-7. Find the Application ID value and copy it to the clipboard.
-8. For the App ID URI, enter https://\<your_tenant_name\>/TodoListService, replacing \<your_tenant_name\> with the name of your Azure AD tenant. 
+3. Click on **All Services** in the left hand nav, and choose **Azure Active Directory**.
+4. Click on **App registrations** and choose **New application registration**.
+5. Enter a friendly name for the application, for example 'TodoListService' and select 'Web app / API' as the Application type. For the Sign-on URL, enter the base URL for the sample, which is by default `https://localhost:44321`. Click on **Create** to create the application.
+6. In the succeeding page, Find the Application ID value and copy it to the clipboard.
+7. Then click on **Settings** and choose **Properties**.
+8. For the App ID URI, update the existing value https://\<your_tenant_name\>/TodoListService by replacing \<your_tenant_name\> with the name of your Azure AD tenant. 
 
 #### Register the TodoListClient app
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant where you wish to register your application.
-3. Click on **More Services** in the left hand nav, and choose **Azure Active Directory**.
-4. Click on **App registrations** and choose **Add**.
+3. Click on **All Services** in the left hand nav, and choose **Azure Active Directory**.
+4. Click on **App registrations** and choose **New application registration**.
 5. Enter a friendly name for the application, for example 'TodoListClient-Headless-DotNet' and select 'Native' as the Application Type. For the redirect URI, enter `https://TodoListClient`. Please note that the Redirect URI will not be used in this sample, but it needs to be defined nonetheless. Click on **Create** to create the application.
-6. While still in the Azure portal, choose your application, click on **Settings** and choose **Properties**.
-7. Find the Application ID value and copy it to the clipboard.
-8. Configure Permissions for your application - in the Settings menu, choose the 'Required permissions' section, click on **Add**, then **Select an API**, and type 'TodoListService' in the textbox. Then, click on  **Select Permissions** and select 'Access TodoListService'.
+6. In the succeeding page, Find the Application ID value and copy it to the clipboard.
+7. Then click on **Settings** and choose **Properties**.
+8. Configure Permissions for your application - in the Settings menu, choose the 'Required permissions' section, click on **Add**, then **Select an API**, and type 'TodoListService' in the textbox and hit enter. Select TodoListService from the results and click the 'Select' button. Then, click on  **Select Permissions** and select 'Access TodoListService'. Click the 'Select' button again to close this screen. Click on "Done" to finish adding the permission.
+9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, its incapable of displaying an UI for the tenant administrator or the user to grant consent. So we would instead provide the admin consent for all users in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).  
 
 
 ### Step 3:  Configure the sample to use your Azure AD tenant
 
 #### Configure the TodoListService project
 
-1. Open the solution in Visual Studio 2013.
+1. Open the solution in Visual Studio 2017.
 2. Open the `web.config` file.
 3. Find the app key `ida:Tenant` and replace the value with your AAD tenant name.
 4. Find the app key `ida:Audience` and replace the value with the App ID URI you registered earlier, for example `https://<your_tenant_name>/TodoListService`.
@@ -70,43 +85,7 @@ There are two projects in this sample.  Each needs to be separately registered i
 4. Find the app key `todo:TodoListResourceId` and replace the value with the  App ID URI of the TodoListService, for example `https://<your_tenant_name>/TodoListService`
 5. Find the app key `todo:TodoListBaseAddress` and replace the value with the base address of the TodoListService project.
 
-### Step 4:  Trust the IIS Express SSL certificate
-
-Since the web API is SSL protected, the client of the API (the web app) will refuse the SSL connection to the web API unless it trusts the API's SSL certificate.  Use the following steps in Windows Powershell to trust the IIS Express SSL certificate.  You only need to do this once.  If you fail to do this step, calls to the TodoListService will always throw an unhandled exception where the inner exception message is:
-
-"The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel."
-
-To configure your computer to trust the IIS Express SSL certificate, begin by opening a Windows Powershell command window as Administrator.
-
-Query your personal certificate store to find the thumbprint of the certificate for `CN=localhost`:
-
-```
-PS C:\windows\system32> dir Cert:\LocalMachine\My
-
-
-    Directory: Microsoft.PowerShell.Security\Certificate::LocalMachine\My
-
-
-Thumbprint                                Subject
-----------                                -------
-C24798908DA71693C1053F42A462327543B38042  CN=localhost
-```
-
-Next, add the certificate to the Trusted Root store:
-
-```
-PS C:\windows\system32> $cert = (get-item cert:\LocalMachine\My\C24798908DA71693C1053F42A462327543B38042)
-PS C:\windows\system32> $store = (get-item cert:\Localmachine\Root)
-PS C:\windows\system32> $store.Open("ReadWrite")
-PS C:\windows\system32> $store.Add($cert)
-PS C:\windows\system32> $store.Close()
-```
-
-You can verify the certificate is in the Trusted Root store by running this command:
-
-`PS C:\windows\system32> dir Cert:\LocalMachine\Root`
-
-### Step 5:  Run the sample
+### Step 4:  Run the sample
 
 Clean the solution, rebuild the solution, and run it.  You might want to go into the solution properties and set both projects as startup projects, with the service project starting first.
 
@@ -115,7 +94,7 @@ Notice that if you stop the application without clearing the cache, the next tim
 
 ## How To Deploy This Sample to Azure
 
-To deploy the TodoListService to Azure Web Sites, you will create a web site, publish the TodoListService to the web site, and update the TodoListClient to call the web site instead of IIS Express.
+To deploy the TodoListService to Azure App Service, you will create an App Service, publish the TodoListService to the app, and update the TodoListClient to call the Azure App instead of IIS Express.
 
 ### Create and Publish the TodoListService to an Azure Web Site
 
@@ -137,8 +116,69 @@ NOTE:  Remember, the To Do list is stored in memory in this TodoListService samp
 
 ## About The Code
 
-Coming soon.
+This sample shows how to use the OpenID Connect ASP.Net OWIN middleware to secure calls to an Asp.net Web Api to users of a single Azure Active Directory tenant. The middleware is initialized in the `Startup.Auth.cs` file, by passing it the URL of the Azure AD tenant (token issuer) and the AppId URI , which is the identifier by which the Web API is known to Windows Azure AD. 
+The middleware then takes care of:
+- Downloading the Azure AD metadata, finding the signing keys, and finding the issuer name for the tenant.
+- Processing OpenID Connect sign-in responses by validating the signature and issuer in an incoming JWT, extracting the user's claims, and putting them on ClaimsPrincipal.Current.
+- Any tokens carrying a different Audience are meant for another resource and will be rejected.
+
+### Acquiring a token with username password 
+To add an element to the todo list, after trying to acquire a token silently from the cache [Program.cs, line 218](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L218), if this fails, the program asks for a user name password and creates an instance of ``UserCredential``. This is done in [TextualPrompt()](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L89). Then it calls the ``AcquireTokenAsync`` override with the ``UserCredential`` in [Program.cs, line ](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L164).
+
+Since this sample works on .NET framework, it also features the custom serialization of the token cache which happens in [FileCache.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/FileCache.cs)
+
+
+### Acquiring a token with Windows Integrated security
+If your PC is domain joint or AAD joint, you can also use the Windows integrated security. For this, instead of calling TextualPrompt(), you need to uncommment the line creating and instance of UserCredential without parameters: 
+See [Program.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/Program.cs#L159-L161)
+```C#
+UserCredential uc = new UserCredential();
+```
+
+You can trigger the middleware to send an OpenID Connect sign-in request by decorating a class or method with the `[Authorize]` attribute
+
+## Troubleshooting
++- If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 9 of [Register the TodoListClient app](#Register the TodoListClient app)
 
 ## How To Recreate This Sample
+### Code for the service
+1. In Visual Studio 2017, create a new `Visual C#` `ASP.NET Web Application (.NET Framework)`. Choose `Web Api` in the next screen. Leave the project's chosen authentication mode as the default, i.e. `No Authentication`".
+2. Set SSL Enabled to be True.  Note the SSL URL.
+3. Add the following ASP.Net OWIN middleware NuGets: `Microsoft.Owin.Security.ActiveDirectory`.
+4. Add a class named `TodoItem` in the `Models` folder. Add the properties `Title` and `Owner` in this class.
+5. Add a new `Web Api 2 Controller - Empty`  named `TodoListController` in the service.
+6. The `TodoListController` will have an in-memory list of ToDo items and methods to read and write from that list. Refer to the provided `TodoListController` code for more details.
+7. In the `App_Start` folder, create a class `Startup.Auth.cs`.You will need to remove `.App_Start` from the namespace name.  Replace the code for the `Startup` class with the code from the same file of the sample app.  Be sure to take the whole class definition!  The definition changes from `public class Startup` to `public partial class Startup`
+8. In `Startup.Auth.cs` resolve missing references by adding `using` statements as suggested by Visual Studio intellisense.
+9. Right-click on the project, select Add, select "Class", and in the search box enter "OWIN".  "OWIN Startup class" will appear as a selection; select it, and name the class `Startup.cs`.
+10. In `Startup.cs`, replace the code for the `Startup` class with the code from the same file of the sample app.  Again, note the definition changes from `public class Startup` to `public partial class Startup`.
+11. If you want the user to be required to sign-in before they can see any page of the api, then in the `HomeController`, decorate the `HomeController` class with the `[Authorize]` attribute.  If you leave this out, the user will be able to see the home page of the app without having to sign-in first, and can click the sign-in link on that page to get signed in.
+12. In the `web.config` file, in `<appSettings>`, create keys for `ida:Tenant`, and `ida:Audience` and set the values accordingly.
+13. Almost done!  Follow the steps in "Running This Sample" to register the application in your AAD tenant.
 
-coming soon.
+### Code for the console client
+1. In Visual Studio 2017, create a new `Visual C#` `Console App (>NET Framework)`.
+2. Add the nugets: `Microsoft.Owin.Security.ActiveDirectory`, `Newtonsoft.Json` and `System.Net.Http`.
+3. Add a reference for the `System.Security' assembly in the project.
+4. In `Program.cs`, replace the code for the `Program` class with the code from the same file of the sample app. Resolve missing references by adding `using` statements as suggested by Visual Studio intellisense.
+5. Add a new class called `FileCache.cs` in the project. It is a simple persistent cache implementation for a desktop application. It uses DPAPI for storing tokens in a local file.Replace the code for the `FileCache` class with the code from the same file of the sample app.  Be sure to take the whole class definition!
+6. In the `FileCache.cs` class, resolve missing references by adding `using` statements as suggested by Visual Studio intellisense.
+7. In `app.config`, in `<appSettings>`, create keys for `ida:Tenant`, `ida:ClientId`, `ida:AADInstance`, `todo:TodoListResourceId` and `todo:TodoListBaseAddress` and set the values accordingly.  For the public Azure AD, the value of `ida:AADInstance` is `https://login.microsoftonline.com/{0}`.
+
+## Azure Government Deviations
+In order to run this sample on Azure Government you can follow through the steps above with a few variations:
+
+- Step 2: 
+   - You must register this sample for your AAD Tenant in Azure Government by following Step 2 above in the [Azure Government portal](https://portal.azure.us). 
+- Step 3: 
+    - Before configuring the sample, you must make sure your [Visual Studio is connected to Azure Government](https://docs.microsoft.com/azure/azure-government/documentation-government-get-started-connect-with-vs).     
+    - Navigate to the Web.config file. Replace the `ida:AADInstance` property in the Azure AD section with `https://login.microsoftonline.us/`. 
+    
+Once those changes have been accounted for, you should be able to run this sample on Azure Government.  
+
+## More information
+For more information see ADAL.NET's conceptual documentation:
+- [Recommanded pattern to acquire a token](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-a-cached-token#recommended-pattern-to-acquire-a-token)
+- [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password) 
+- [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
+- [Customizing Token cache serialization](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Token-cache-serialization)
