@@ -111,13 +111,30 @@ To deploy the TodoListService to Azure App Service, you will create an App Servi
 NOTE:  Remember, the To Do list is stored in memory in this TodoListService sample.  Azure Web Sites will spin down your web site if it is inactive, and your To Do list will get emptied.  Also, if you increase the instance count of the web site, requests will be distributed among the instances and the To Do will not be the same on each instance.
 
 ## About The Code
+
 This sample shows how to use the OpenID Connect ASP.Net OWIN middleware to secure calls to an Asp.net Web Api to users of a single Azure Active Directory tenant. The middleware is initialized in the `Startup.Auth.cs` file, by passing it the URL of the Azure AD tenant (token issuer) and the AppId URI , which is the identifier by which the Web API is known to Windows Azure AD. 
 The middleware then takes care of:
 - Downloading the Azure AD metadata, finding the signing keys, and finding the issuer name for the tenant.
 - Processing OpenID Connect sign-in responses by validating the signature and issuer in an incoming JWT, extracting the user's claims, and putting them on ClaimsPrincipal.Current.
 - Any tokens carrying a different Audience are meant for another resource and will be rejected.
 
+### Acquiring a token with username password 
+To add an element to the todo list, after trying to acquire a token silently from the cache [Program.cs, line 218](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L218), if this fails, the program asks for a user name password and creates an instance of ``UserCredential``. This is done in [TextualPrompt()](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L89). Then it calls the ``AcquireTokenAsync`` override with the ``UserCredential`` in [Program.cs, line ](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L164).
+
+Since this sample works on .NET framework, it also features the custom serialization of the token cache which happens in [FileCache.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/FileCache.cs)
+
+
+### Acquiring a token with Windows Integrated security
+If your PC is domain joint or AAD joint, you can also use the Windows integrated security. For this, instead of calling TextualPrompt(), you need to uncommment the line creating and instance of UserCredential without parameters: 
+See [Program.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/Program.cs#L159-L161)
+```C#
+UserCredential uc = new UserCredential();
+```
+
 You can trigger the middleware to send an OpenID Connect sign-in request by decorating a class or method with the `[Authorize]` attribute
+
+## Troubleshooting
++- If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 9 of [Register the TodoListClient app](#Register the TodoListClient app)
 
 ## How To Recreate This Sample
 ### Code for the service
@@ -154,3 +171,10 @@ In order to run this sample on Azure Government you can follow through the steps
     - Navigate to the Web.config file. Replace the `ida:AADInstance` property in the Azure AD section with `https://login.microsoftonline.us/`. 
     
 Once those changes have been accounted for, you should be able to run this sample on Azure Government.  
+
+## More information
+For more information see ADAL.NET's conceptual documentation:
+- [Recommanded pattern to acquire a token](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-a-cached-token#recommended-pattern-to-acquire-a-token)
+- [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password) 
+- [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
+- [Customizing Token cache serialization](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Token-cache-serialization)
