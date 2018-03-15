@@ -1,15 +1,14 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TodoListClient
 {
@@ -25,7 +24,7 @@ namespace TodoListClient
         // To contact the To Do list service we need its URL as well.
         //
         private static string todoListResourceId = ConfigurationManager.AppSettings["todo:TodoListResourceId"];
-        private static string todoListBaseAddress = ConfigurationManager.AppSettings["todo:TodoListBaseAddress"];        
+        private static string todoListBaseAddress = ConfigurationManager.AppSettings["todo:TodoListBaseAddress"];
         private static AuthenticationContext authContext = null;
         #endregion
 
@@ -33,7 +32,7 @@ namespace TodoListClient
         {
             string commandString = string.Empty;
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("**************************************************");            
+            Console.WriteLine("**************************************************");
             Console.WriteLine("*              ToDo List Text Client             *");
             Console.WriteLine("*                                                *");
             Console.WriteLine("*       Type commands to manage your ToDos       *");
@@ -52,17 +51,22 @@ namespace TodoListClient
                 Console.WriteLine("Enter command (list | add | clear | exit | help) >");
                 commandString = Console.ReadLine();
 
-                switch(commandString.ToUpper())
-                { 
-                    case "LIST": ListTodo();
+                switch (commandString.ToUpper())
+                {
+                    case "LIST":
+                        ListTodo();
                         break;
-                    case "ADD": AddTodo();
+                    case "ADD":
+                        AddTodo();
                         break;
-                    case "CLEAR": ClearCache();
+                    case "CLEAR":
+                        ClearCache();
                         break;
-                    case "HELP": Help();
+                    case "HELP":
+                        Help();
                         break;
-                    case "EXIT": Console.WriteLine("Bye!"); ;
+                    case "EXIT":
+                        Console.WriteLine("Bye!"); ;
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -99,7 +103,7 @@ namespace TodoListClient
             {
                 message += Environment.NewLine + "Inner Exception : " + ex.InnerException.Message;
             }
-            Console.WriteLine("Message: {0}",message);
+            Console.WriteLine("Message: {0}", message);
         }
 
         // Obscure the password being entered
@@ -183,12 +187,12 @@ namespace TodoListClient
                 var todoArray = JArray.Parse(rezstring);
                 Console.ForegroundColor = ConsoleColor.Green;
                 foreach (var todo in todoArray)
-                { 
+                {
                     Console.WriteLine(todo["Title"]);
                 }
             }
             #endregion
-            
+
             #region Error handling
             else
             {
@@ -201,7 +205,7 @@ namespace TodoListClient
                 }
                 else
                 {
-                    Console.WriteLine("Sorry, an error occurred accessing your To Do list.  Please try again.");                    
+                    Console.WriteLine("Sorry, an error occurred accessing your To Do list.  Please try again.");
                 }
             }
             #endregion
@@ -251,7 +255,7 @@ namespace TodoListClient
             #region Call Web API
             Console.WriteLine("Enter new todo description >");
             string descr = Console.ReadLine();
-            
+
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
             HttpContent content = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("Title", descr) });
@@ -261,7 +265,7 @@ namespace TodoListClient
             if (response.IsSuccessStatusCode)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("New ToDo '{0}' successfully added.",descr);
+                Console.WriteLine("New ToDo '{0}' successfully added.", descr);
             }
             #endregion
 
@@ -273,11 +277,11 @@ namespace TodoListClient
                 {
                     // If the To Do list service returns access denied, clear the token cache and have the user sign-in again.                    
                     Console.WriteLine("Sorry, you don't have access to the To Do Service. You might need to sign up.");
-                    authContext.TokenCache.Clear();                    
+                    authContext.TokenCache.Clear();
                 }
                 else
                 {
-                    Console.WriteLine("Sorry, an error occurred accessing your To Do list.  Please try again.");                    
+                    Console.WriteLine("Sorry, an error occurred accessing your To Do list.  Please try again.");
                 }
             }
             #endregion
@@ -287,7 +291,7 @@ namespace TodoListClient
         {
             authContext.TokenCache.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Token cache cleared.");                    
+            Console.WriteLine("Token cache cleared.");
         }
         static void Help()
         {
@@ -296,7 +300,7 @@ namespace TodoListClient
             Console.WriteLine("ADD   - adds a new ToDo to your list. Requires sign in");
             Console.WriteLine("CLEAR - empties the token cache, allowing you to sign in as a different user");
             Console.WriteLine("HELP  - displays this page");
-            Console.WriteLine("EXIT  - closes this program");            
+            Console.WriteLine("EXIT  - closes this program");
             Console.WriteLine("");
         }
         #endregion
