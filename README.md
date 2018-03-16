@@ -8,6 +8,7 @@ service: .NET Framework 4.6.1 web api
 endpoint: AAD V1
 ---
 # Authenticating to Azure AD non-interactively using a username & password
+![](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/22/badge)
 ## About this sample
 ### Scenario
 This sample demonstrates a .Net console application calling a web API that is secured using Azure AD. The .Net application uses the Active Directory Authentication Library (ADAL) to obtain a JWT access token through the OAuth 2.0 protocol. The access token is sent to the web API to authenticate the user. This sample shows you how to use ADAL to authenticate users via raw credentials (username and password, or Windows integrated authentication) via a text-only interface. More information is available in the ADAL.NET conceptual documentation in [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password) and [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
