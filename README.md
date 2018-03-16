@@ -39,8 +39,8 @@ From your shell or command line:
 ### Step 2:  Register the sample with your Azure Active Directory tenant and configure the code accordingly
 
 There are two options:
- - Option 1: you run the `Configure.ps1` PowerShell script which creates two applications in the Azure Active Directory, (one for the client and one for the service), and then updates the configuration files in the Visual Studio projects to point to those two newly created apps.
- - Option 2: you do the same manually.
+ - Option 1: you run the `Configure.ps1` PowerShell script which creates two applications in the Azure Active Directory, (one for the client and one for the service), and then updates the configuration files in the Visual Studio projects to point to those two newly created apps. Instructions are provided in the [Configure.ps1](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/bd7479968c6f56d25759ab30aabda5e77e9484c3/AppCreationScripts/Configure.ps1#L2-L29) file
+ - Option 2: you do the same manually. This is what is explained below:
 
 There are two projects in this sample.  Each needs to be separately registered in your Azure AD tenant.
 
@@ -65,7 +65,7 @@ There are two projects in this sample.  Each needs to be separately registered i
 6. In the succeeding page, Find the Application ID value and copy it to the clipboard.
 7. Then click on **Settings** and choose **Properties**.
 8. Configure Permissions for your application - in the Settings menu, choose the 'Required permissions' section, click on **Add**, then **Select an API**, and type 'TodoListService' in the textbox and hit enter. Select TodoListService from the results and click the 'Select' button. Then, click on  **Select Permissions** and select 'Access TodoListService'. Click the 'Select' button again to close this screen. Click on "Done" to finish adding the permission.
-9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, its incapable of displaying an UI for the tenant administrator or the user to grant consent. So we would instead provide the admin consent for all users in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).  
+9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, its incapable of displaying an UI for the user or tenant administrator to grant consent. So you need to provide the user consent for yourself (if you are not a tenant admin) or the admin consent for all users (if you are a tenant admin) in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).  
 
 
 ### Step 3:  Configure the sample to use your Azure AD tenant
