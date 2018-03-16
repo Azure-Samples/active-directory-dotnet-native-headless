@@ -139,7 +139,7 @@ UserCredential uc = new UserCredential();
 You can trigger the middleware to send an OpenID Connect sign-in request by decorating a class or method with the `[Authorize]` attribute
 
 ## Troubleshooting
-+- If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 9 of [Register the TodoListClient app](#Register the TodoListClient app)
+If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 9 of [Register the TodoListClient app](README.md#register-the-todolistclient-app)
 
 ## How To Recreate This Sample
 ### Code for the service
