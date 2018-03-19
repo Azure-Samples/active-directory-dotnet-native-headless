@@ -8,9 +8,10 @@ service: .NET Framework 4.6.1 web api
 endpoint: AAD V1
 ---
 # Authenticating to Azure AD non-interactively using a username & password
+![](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/22/badge)
 ## About this sample
 ### Scenario
-This sample demonstrates a .Net console application calling a web API that is secured using Azure AD. The .Net application uses the Active Directory Authentication Library (ADAL) to obtain a JWT access token through the OAuth 2.0 protocol. The access token is sent to the web API to authenticate the user. This sample shows you how to use ADAL to authenticate users via raw credentials (username and password, or Windows integrated authentication) via a text-only interface. More information is available in the ADAL.NET conceptual documentation in [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password) and [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
+This sample demonstrates a .Net console application calling a web API that is secured using Azure AD. The .Net application uses the Active Directory Authentication Library (ADAL) to obtain a JWT access token through the OAuth 2.0 protocol. The access token is sent to the web API to authenticate the user. This sample shows you how to use ADAL to authenticate users via raw credentials (username and password, or Windows integrated authentication) via a text-only interface. Information is available in the ADAL.NET conceptual documentation in [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password) and [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
 
 ### More information
 For more information about how the protocols work in this scenario and other scenarios, see [Authentication Scenarios for Azure AD](https://azure.microsoft.com/documentation/articles/active-directory-authentication-scenarios/).
@@ -39,8 +40,8 @@ From your shell or command line:
 ### Step 2:  Register the sample with your Azure Active Directory tenant and configure the code accordingly
 
 There are two options:
- - Option 1: you run the `Configure.ps1` PowerShell script which creates two applications in the Azure Active Directory, (one for the client and one for the service), and then updates the configuration files in the Visual Studio projects to point to those two newly created apps.
- - Option 2: you do the same manually.
+ - Option 1: you run the `Configure.ps1` PowerShell script which creates two applications in the Azure Active Directory, (one for the client and one for the service), and then updates the configuration files in the Visual Studio projects to point to those two newly created apps. Instructions are provided in the [Configure.ps1](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/bd7479968c6f56d25759ab30aabda5e77e9484c3/AppCreationScripts/Configure.ps1#L2-L29) file
+ - Option 2: you do the same manually. This is what is explained below:
 
 There are two projects in this sample.  Each needs to be separately registered in your Azure AD tenant.
 
@@ -65,7 +66,7 @@ There are two projects in this sample.  Each needs to be separately registered i
 6. In the succeeding page, Find the Application ID value and copy it to the clipboard.
 7. Then click on **Settings** and choose **Properties**.
 8. Configure Permissions for your application - in the Settings menu, choose the 'Required permissions' section, click on **Add**, then **Select an API**, and type 'TodoListService' in the textbox and hit enter. Select TodoListService from the results and click the 'Select' button. Then, click on  **Select Permissions** and select 'Access TodoListService'. Click the 'Select' button again to close this screen. Click on "Done" to finish adding the permission.
-9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, its incapable of displaying an UI for the tenant administrator or the user to grant consent. So we would instead provide the admin consent for all users in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).  
+9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, its incapable of displaying an UI for the user or tenant administrator to grant consent. So you need to provide the user consent for yourself (if you are not a tenant admin) or the admin consent for all users (if you are a tenant admin) in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).  
 
 
 ### Step 3:  Configure the sample to use your Azure AD tenant
@@ -138,7 +139,7 @@ UserCredential uc = new UserCredential();
 You can trigger the middleware to send an OpenID Connect sign-in request by decorating a class or method with the `[Authorize]` attribute
 
 ## Troubleshooting
-+- If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 9 of [Register the TodoListClient app](#Register the TodoListClient app)
+If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 9 of [Register the TodoListClient app](README.md#register-the-todolistclient-app)
 
 ## How To Recreate This Sample
 ### Code for the service
