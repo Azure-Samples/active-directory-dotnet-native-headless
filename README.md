@@ -145,7 +145,7 @@ If you get the following error: ``Inner Exception : AADSTS65001: The user or adm
 ### Code for the service
 1. In Visual Studio 2017, create a new `Visual C#` `ASP.NET Web Application (.NET Framework)`. Choose `Web Api` in the next screen. Leave the project's chosen authentication mode as the default, i.e. `No Authentication`".
 2. Set SSL Enabled to be True.  Note the SSL URL.
-3. Add the following ASP.Net OWIN middleware NuGets: `Microsoft.Owin.Security.ActiveDirectory`.
+3. Add the following ASP.Net OWIN middleware NuGets: `Microsoft.Owin.Security.ActiveDirectory` and `Microsoft.Owin.Host.SystemWeb`.
 4. Add a class named `TodoItem` in the `Models` folder. Add the properties `Title` and `Owner` in this class.
 5. Add a new `Web Api 2 Controller - Empty`  named `TodoListController` in the service.
 6. The `TodoListController` will have an in-memory list of ToDo items and methods to read and write from that list. Refer to the provided `TodoListController` code for more details.
