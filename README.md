@@ -7,7 +7,7 @@ client: .NET Framework 4.6.1 Console
 service: .NET Framework 4.6.1 Web aApi
 endpoint: AAD V1
 ---
-# Authenticating to Azure AD non-interactively using a username & password
+# Authenticating to Azure AD non-interactively using a username & password or Windows Integrated Authentication
 
 ![Build badge](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/22/badge)
 
