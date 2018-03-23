@@ -40,7 +40,7 @@ To run this sample you will need:
 - [Visual Studio 2017](https://aka.ms/vsdownload)
 - An Internet connection
 - An Azure Active Directory (Azure AD) tenant. For more information on how to get an Azure AD tenant, please see [How to get an Azure AD tenant](https://azure.microsoft.com/en-us/documentation/articles/active-directory-howto-tenant/)
-- A user account in your Azure AD tenant. This sample will not work with a Microsoft account, so if you signed in to the Azure portal with a Microsoft account and have never created a user account in your directory before, you need to do that now. This sample will not work with a Microsoft account (formerly Windows Live account).
+- A user account in your Azure AD tenant. This sample will not work with a Microsoft account (formerly Windows Live account), so if you signed in to the Azure portal with a Microsoft account and have never created a user account in your directory before, you need to do that now. This sample will not work with a Microsoft account.
 
 ### Step 1:  Clone or download this repository
 
@@ -53,7 +53,7 @@ From your shell or command line:
 There are two projects in this sample. Each needs to be separately registered in your Azure AD tenant. To register these projects you can:
 
 - either follow the steps in the paragraphs below (Step 2 and Step 3)
-- or you can use PowerShell scripts which automatically create for you the Azure AD applications and related objects (passwords, permissions, dependencies) and modify the projects' configuration files. If you want to do use this automation, read the instructions in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
+- or you can use PowerShell scripts which automatically create for you the Azure AD applications and related objects (passwords, permissions, dependencies) and modify the projects' configuration files. If you still want to use this automation, read the instructions in [App Creation Scripts](./AppCreationScripts/AppCreationScripts.md)
 
 #### Register the TodoListService web API
 
@@ -62,7 +62,7 @@ There are two projects in this sample. Each needs to be separately registered in
 3. Click on **All Services** in the left hand nav, and choose **Azure Active Directory**.
 4. Click on **App registrations** and choose **New application registration**.
 5. Enter a friendly name for the application, for example 'TodoListService' and select 'Web app / API' as the Application type. For the Sign-on URL, enter the base URL for the sample, which is by default `https://localhost:44321`. Click on **Create** to create the application.
-6. In the succeeding page, Find the Application ID value and copy it to the clipboard.
+6. In the succeeding page, find the Application ID value and copy it to the clipboard.
 7. Then click on **Settings** and choose **Properties**.
 8. For the App ID URI, update the existing value https://\<your_tenant_name\>/TodoListService by replacing \<your_tenant_name\> with the name of your Azure AD tenant.
 
@@ -73,10 +73,10 @@ There are two projects in this sample. Each needs to be separately registered in
 3. Click on **All Services** in the left hand nav, and choose **Azure Active Directory**.
 4. Click on **App registrations** and choose **New application registration**.
 5. Enter a friendly name for the application, for example 'TodoListClient-Headless-DotNet' and select 'Native' as the Application Type. For the redirect URI, enter `https://TodoListClient`. Please note that the Redirect URI will not be used in this sample, but it needs to be defined nonetheless. Click on **Create** to create the application.
-6. In the succeeding page, Find the Application ID value and copy it to the clipboard.
+6. In the succeeding page, find the Application ID value and copy it to the clipboard.
 7. Then click on **Settings** and choose **Properties**.
 8. Configure Permissions for your application - in the Settings menu, choose the 'Required permissions' section, click on **Add**, then **Select an API**, and type 'TodoListService' in the textbox and hit enter. Select TodoListService from the results and click the 'Select' button. Then, click on  **Select Permissions** and select 'Access TodoListService'. Click the 'Select' button again to close this screen. Click on "Done" to finish adding the permission.
-9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, its incapable of displaying an UI for the user or tenant administrator to grant consent. So you need to provide the user consent for yourself (if you are not a tenant admin) or the admin consent for all users (if you are a tenant admin) in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).
+9. Then select `ToDoListService` in the "Required permissions" blade and click "Grant Permissions". Since our client is a console application using raw credentials, it's incapable of displaying an UI for the user or tenant administrator to grant consent. So you need to provide the user consent for yourself (if you are not a tenant admin) or the admin consent for all users (if you are a tenant admin) in the Azure portal itself. Read more about administrator consent in [Overview of the consent framework](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications#overview-of-the-consent-framework).
 
 ### Step 3:  Configure the sample to use your Azure AD tenant
 
@@ -135,13 +135,13 @@ The middleware then takes care of:
 
 ### Acquiring a token with username password
 
-To add an element to the todo list, after trying to acquire a token silently from the cache [Program.cs, line 218](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L218), if this fails, the program asks for a user name password and creates an instance of ``UserCredential``. This is done in [TextualPrompt()](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L89). Then it calls the ``AcquireTokenAsync`` override with the ``UserCredential`` in [Program.cs, line 164](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L164).
+To add an element to the todo list, first the program will try to acquire a token silently from the cache [Program.cs, line 218](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L218), if this fails, the program asks for a user name password and creates an instance of ``UserCredential``. This is done in [TextualPrompt()](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L89). Then it calls the ``AcquireTokenAsync`` override with the ``UserCredential`` in [Program.cs, line 164](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L164).
 
 Since this sample works on .NET framework, it also features the custom serialization of the token cache which happens in [FileCache.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/FileCache.cs)
 
 ### Acquiring a token with Windows Integrated security
 
-If your PC is domain joint or AAD joint, you can also use the Windows integrated security. For this, instead of calling TextualPrompt(), you need to uncommment the line creating and instance of UserCredential without parameters:
+If your PC is domain joined or AAD joined, you can also use the Windows integrated security. For this, instead of calling TextualPrompt(), you need to uncomment the line creating an instance of UserCredential without parameters:
 See [Program.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/Program.cs#L159-L161)
 
 ```CSharp
@@ -158,7 +158,7 @@ If you get the following error: ``Inner Exception : AADSTS65001: The user or adm
 
 ### Code for the service
 
-1. In Visual Studio 2017, create a new `Visual C#` `ASP.NET Web Application (.NET Framework)`. Choose `Web Api` in the next screen. Leave the project's chosen authentication mode as the default, i.e. `No Authentication`".
+1. In Visual Studio 2017, create a new `Visual C#` `ASP.NET Web Application (.NET Framework)`. Choose `Web Api` in the next screen. Leave the project's chosen authentication mode as the default, i.e. `No Authentication`.
 2. Set SSL Enabled to be True.  Note the SSL URL.
 3. Add the following ASP.Net OWIN middleware NuGets: `Microsoft.Owin.Security.ActiveDirectory` and `Microsoft.Owin.Host.SystemWeb`.
 4. Add a class named `TodoItem` in the `Models` folder. Add the properties `Title` and `Owner` in this class.
