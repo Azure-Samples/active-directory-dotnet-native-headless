@@ -213,3 +213,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 /.vs
+/AppCreationScripts/createdApps.html
