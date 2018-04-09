@@ -34,7 +34,7 @@ For more information about how the protocols work in this scenario and other sce
 
 > [!Note] If you want to run this sample on **Azure Government**, navigate to the "Azure Government Deviations" section at the bottom of this page.
 
-To run this sample, you will need:
+To run this sample, you'll need:
 
 - [Visual Studio 2017](https://aka.ms/vsdownload)
 - An Internet connection
@@ -68,6 +68,9 @@ As a first step you'll need to:
 1. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant where you wish to register your application.
 1. Click on **All services** in the left-hand nav, and choose **Azure Active Directory**.
 
+> In the next steps, you might need the tenant name (or directory name) or the tenant ID (or directory ID). These are presented in the **Properties**
+of the Azure Active Directory window respectively as *Name* and *Directory ID*
+
 #### Register the service app (TodoListService-Headless)
 
 1. In the  **Azure Active Directory** pane, click on **App registrations** and choose **New application registration**.
@@ -86,7 +89,6 @@ As a first step you'll need to:
 1. Click on **Create** to create the application.
 1. In the succeeding page, Find the *Application ID* value and copy it to the clipboard. You'll need it to configure the Visual Studio configuration file for this project.
 1. Then click on **Settings**, and choose **Properties**.
-1. For the App ID URI, replace the guid in the generated URI 'https://\<your_tenant_name\>/\<guid\>', with the name of your service, for example, 'https://\<your_tenant_name\>/TodoListClient-Headless' (replacing `<your_tenant_name>` with the name of your Azure AD tenant)
 1. Configure Permissions for your application. To that extent, in the Settings menu, choose the 'Required permissions' section and then,
    click on **Add**, then **Select an API**, and type `TodoListService-Headless` in the textbox. Then, click on  **Select Permissions** and select **Access 'TodoListService-Headless'**.
 
@@ -96,13 +98,13 @@ In the steps below, ClientID is the same as Application ID or AppId.
 
 Open the solution in Visual Studio to configure the projects
 
-### Configure the service project
+#### Configure the service project
 
 1. Open the `TodoListService\Web.Config` file
 1. Find the app key `ida:Tenant` and replace the existing value with your AAD tenant name.
 1. Find the app key `ida:Audience` and replace the existing value with the App ID URI you registered earlier for the TodoListService-Headless app. For instance use `https://<your_tenant_name>/TodoListService-Headless`, where `<your_tenant_name>` is the name of your Azure AD tenant.
 
-### Configure the client project
+#### Configure the client project
 
 1. Open the `TodoListClient\App.Config` file
 1. Find the app key `ida:Tenant` and replace the existing value with your AAD tenant name.
@@ -123,7 +125,7 @@ This project has one WebApp / Web API projects. To deploy them to Azure Web Site
 
 - create an Azure Web Site
 - publish the Web App / Web APIs to the web site, and
-- update it client(s) to call the web site instead of IIS Express.
+- update its client(s) to call the web site instead of IIS Express.
 
 ### Create and Publish the `TodoListService-Headless` to an Azure Web Site
 
@@ -135,7 +137,7 @@ This project has one WebApp / Web API projects. To deploy them to Azure Web Site
 6. On the Settings tab, make sure Enable Organizational Authentication is NOT selected.  Click Publish.
 7. Visual Studio will publish the project and automatically open a browser to the URL of the project.  If you see the default web page of the project, the publication was successful.
 
-### Update the TodoListClient to call the TodoListService Running in Azure Web Sites
+### Update the Active Directory tenant application registration for `TodoListService-Headless`
 
 1. Navigate to the [Azure portal](https://portal.azure.com).
 2. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant containing the `TodoListService-Headless` application.
@@ -163,7 +165,7 @@ The middleware then takes care of:
 
 ### Acquiring a token with username password
 
-To add an element to the todo list, first the program will try to acquire a token silently from the cache [Program.cs, line 218](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L218), if this fails, the program asks for a user name password and creates an instance of ``UserCredential``. This is done in [TextualPrompt()](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L89). Then it calls the ``AcquireTokenAsync`` override with the ``UserCredential`` in [Program.cs, line 164](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L164).
+To add an element to the todo list, first the program will try to acquire a token silently from the cache [Program.cs, line 218](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L218), if this acquisition fails, the program asks for a user name password and creates an instance of ``UserCredential``. This is done in [TextualPrompt()](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L89). Then it calls the ``AcquireTokenAsync`` override with the ``UserCredential`` in [Program.cs, line 164](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/548946c420fdd777e87480aec968f004029db05e/TodoListClient/Program.cs#L164).
 
 Since this sample works on .NET framework, it also features the custom serialization of the token cache, which happens in [FileCache.cs](https://github.com/Azure-Samples/active-directory-dotnet-native-headless/blob/update/TodoListClient/FileCache.cs)
 
@@ -240,7 +242,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 ## More information
 
-For more information see ADAL.NET's conceptual documentation:
+For more information, see ADAL.NET's conceptual documentation:
 
 - [Recommanded pattern to acquire a token](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-a-cached-token#recommended-pattern-to-acquire-a-token)
 - [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password)
