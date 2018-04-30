@@ -1,4 +1,11 @@
 {
+  "Sample": {
+    "Title": "A windows desktop console application that demonstrates non-interactive authentication to Azure AD using a username & password, and optionnally windows inegrated authentication",
+    "Level": 200,
+    "Client": "Desktop (Console)",
+    "Service": "ASP.NET Web API"
+  },
+
   /*
     This section describes the Azure AD Applications to configure, and their dependencies
   */
@@ -20,7 +27,7 @@
         }
       ],
       "ManualSteps": [
-        { "Comment":"click Settings > Required permissions > Grant Permissions"}
+        { "Comment": "click Settings > Required permissions > Grant Permissions" }
       ]
     }
   ],
