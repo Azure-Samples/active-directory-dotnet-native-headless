@@ -54,10 +54,10 @@ namespace TodoListClient
                 switch (commandString.ToUpper())
                 {
                     case "LIST":
-                        ListTodo();
+                        ListTodo().Wait();
                         break;
                     case "ADD":
-                        AddTodo();
+                        AddTodo().Wait();
                         break;
                     case "CLEAR":
                         ClearCache();
@@ -136,27 +136,11 @@ namespace TodoListClient
         #region Commands
         // List all the ToDos for the current user.
         // If there is no valid token available, obtain a new one.
-        static void ListTodo()
+        static async Task ListTodo()
         {
             #region Obtain token
-            AuthenticationResult result = null;
-            // first, try to get a token silently
-            try
-            {
-                result = authContext.AcquireTokenSilentAsync(todoListResourceId, clientId).Result;
-            }
-            catch (AggregateException exc)
-            {
-                AdalException ex = exc.InnerException as AdalException;
 
-                // There is no token in the cache; prompt the user to sign-in.
-                if (ex != null && ex.ErrorCode != "failed_to_acquire_token_silently")
-                {
-                    // An unexpected error occurred.
-                    ShowError(ex);
-                    return;
-                }
-            }
+            AuthenticationResult result = await TryFetchTokenSilently();
 
             if (result == null)
             {
@@ -212,27 +196,11 @@ namespace TodoListClient
         }
         // Add a new ToDo in the list of the current user.
         // If there is no valid token available, obtain a new one.
-        static void AddTodo()
+        static async Task AddTodo()
         {
             #region Obtain token
-            AuthenticationResult result = null;
-            // first, try to get a token silently
-            try
-            {
-                result = authContext.AcquireTokenSilentAsync(todoListResourceId, clientId).Result;
-            }
-            catch (AggregateException exc)
-            {
-                AdalException ex = exc.InnerException as AdalException;
 
-                // There is no token in the cache; prompt the user to sign-in.
-                if (ex != null && ex.ErrorCode != "failed_to_acquire_token_silently")
-                {
-                    // An unexpected error occurred.
-                    ShowError(ex);
-                    return;
-                }
-            }
+            AuthenticationResult result = await TryFetchTokenSilently();
 
             if (result == null)
             {
@@ -285,7 +253,37 @@ namespace TodoListClient
                 }
             }
             #endregion
+
+          
         }
+
+        private static async Task<AuthenticationResult> TryFetchTokenSilently()
+        {
+            AuthenticationResult result = null;
+
+            // first, try to get a token silently
+            try
+            {
+                return result = await authContext.AcquireTokenSilentAsync(todoListResourceId, clientId);
+            }
+            catch (AdalException adalException)
+            {
+                // There is no token in the cache; prompt the user to sign-in.
+                if (adalException.ErrorCode == AdalError.FailedToAcquireTokenSilently
+                    || adalException.ErrorCode == AdalError.InteractionRequired)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("No token in the cache");
+                    return result;
+                }
+
+                // An unexpected error occurred.
+                ShowError(adalException);
+            }
+
+            return result;
+        }
+
         // Empties the token cache
         static void ClearCache()
         {
