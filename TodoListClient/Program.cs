@@ -144,9 +144,9 @@ namespace TodoListClient
 
             if (result == null)
             {
-                // UserCredential uc = TextualPrompt();
+                UserCredential uc = TextualPrompt();
                 // if you want to use Windows integrated auth, comment the line above and uncomment the one below
-                UserCredential uc = new UserCredential();
+                // UserCredential uc = new UserCredential();
                 try
                 {
                     result = authContext.AcquireTokenAsync(todoListResourceId, clientId, uc).Result;
