@@ -92,6 +92,7 @@ of the Azure Active Directory window respectively as *Name* and *Directory ID*
 1. Then click on **Settings**, and choose **Properties**.
 1. Configure Permissions for your application. To that extent, in the Settings menu, choose the 'Required permissions' section and then,
    click on **Add**, then **Select an API**, and type `TodoListService-Headless` in the textbox. Then, click on  **Select Permissions** and select **Access 'TodoListService-Headless'**.
+1. Still in the *Required Permissions* panel, press **Grant Permissions**
 
 ### Step 3:  Configure the sample to use your Azure AD tenant
 
@@ -183,7 +184,7 @@ You can trigger the middleware to send an OpenID Connect sign-in request by deco
 
 ## Troubleshooting
 
-If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 7 of [Register the client app (TodoListClient-Headless)](#register-the-client-app-todolistclient-headless)
+If you get the following error: ``Inner Exception : AADSTS65001: The user or administrator has not consented to use the application with ID *your app ID* named 'TodoListClient'. Send an interactive authorization request for this user and resource``, then check that you have done bullet point 8 of [Register the client app (TodoListClient-Headless)](#register-the-client-app-todolistclient-headless)
 
 ## How To Recreate This Sample
 
