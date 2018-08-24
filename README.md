@@ -2,7 +2,7 @@
 services: active-directory
 platforms: dotnet
 author: jmprieur
-level: 300
+level: 200
 client: .NET Desktop (Console)
 service: ASP.NET MVC Web API
 endpoint: AAD V1
@@ -65,7 +65,7 @@ If you want to use this automation, read the instructions in [App Creation Scrip
 As a first step you'll need to:
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
-1. On the top bar, click on your account, and then on **Switch Directory**. 
+1. On the top bar, click on your account, and then on **Switch Directory**.
 1. Once the *Directory + subscription* pane opens, choose the Active Directory tenant where you wish to register your application, from the *Favorites* or *All Directories* list.
 1. Click on **All services** in the left-hand nav, and choose **Azure Active Directory**.
 
@@ -76,7 +76,7 @@ of the Azure Active Directory window respectively as *Name* and *Directory ID*
 
 1. In the  **Azure Active Directory** pane, click on **App registrations** and choose **New application registration**.
 1. Enter a friendly name for the application, for example 'TodoListService-Headless' and select 'Web app / API' as the *Application Type*.
-1. For the *sign-on URL*, enter the base URL for the sample. By default, this sample uses `https://localhost:44321`.
+1. For the *Sign-on URL*, enter the base URL for the sample. By default, this sample uses `https://localhost:44321`.
 1. Click **Create** to create the application.
 1. In the succeeding page, Find the *Application ID* value and record it for later. You'll need it to configure the Visual Studio configuration file for this project.
 1. Then click on **Settings**, and choose **Properties**.
@@ -129,12 +129,12 @@ This project has one WebApp / Web API projects. To deploy them to Azure Web Site
 - publish the Web App / Web APIs to the web site, and
 - update its client(s) to call the web site instead of IIS Express.
 
-### Create and Publish the `TodoListService-Headless` to an Azure Web Site
+### Create and publish the `TodoListService-Headless` to an Azure Web Site
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Click **Create a resource** in the top left-hand corner, select **Web + Mobile** --> **Web App**, select the hosting plan and region, and give your web site a name, for example, `TodoListService-Headless-contoso.azurewebsites.net`.  Click Create Web Site.
 3. Once the web site is created, click on it to manage it.  For this set of steps, download the publish profile by clicking **Get publish profile** and save it.  Other deployment mechanisms, such as from source control, can also be used.
-4. Switch to Visual Studio and go to the TodoListService project.  Right click on the project in the Solution Explorer and select **Publish**.  Click **Import Profile** on the bottom bar, and import the publish profile that you downloaded earlier.
+4. Switch to Visual Studio and go to the TodoListService-Headless project.  Right click on the project in the Solution Explorer and select **Publish**.  Click **Import Profile** on the bottom bar, and import the publish profile that you downloaded earlier.
 5. Click on **Settings** and in the `Connection tab`, update the Destination URL so that it is https, for example [https://TodoListService-Headless-contoso.azurewebsites.net](https://TodoListService-Headless-contoso.azurewebsites.net). Click Next.
 6. On the Settings tab, make sure `Enable Organizational Authentication` is NOT selected.  Click **Save**. Click on **Publish** on the main screen.
 7. Visual Studio will publish the project and automatically open a browser to the URL of the project.  If you see the default web page of the project, the publication was successful.
@@ -142,9 +142,10 @@ This project has one WebApp / Web API projects. To deploy them to Azure Web Site
 ### Update the Active Directory tenant application registration for `TodoListService-Headless`
 
 1. Navigate to the [Azure portal](https://portal.azure.com).
-2. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant containing the `TodoListService-Headless` application.
-3. On the applications tab, select the `TodoListService-Headless` application.
-4. From the Settings -> Properties and Settings -> Reply URLs menus, update the Sign-On URL, and Reply URL fields to the address of your service, for example [https://TodoListService-Headless-contoso.azurewebsites.net](https://TodoListService-Headless-contoso.azurewebsites.net). Save the configuration.
+1. On the top bar, click on your account and under the **Directory** list, choose the Active Directory tenant containing the `TodoListService-Headless` application.
+1. On the applications tab, select the `TodoListService-Headless` application.
+1. From the *Settings -> Properties* menu, update the **Home page URL**, to the address of your service, for example [https://TodoListService-Headless-contoso.azurewebsites.net](https://TodoListService-Headless-contoso.azurewebsites.net). Save the configuration.
+1. Add the same URL in the list of values of the *Settings -> Reply URLs* menu
 
 ### Update the `TodoListClient-Headless` to call the `TodoListService-Headless` Running in Azure Web Sites
 
@@ -246,7 +247,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 For more information, see ADAL.NET's conceptual documentation:
 
-- [Recommanded pattern to acquire a token](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-a-cached-token#recommended-pattern-to-acquire-a-token)
+- [Recommended pattern to acquire a token](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-a-cached-token#recommended-pattern-to-acquire-a-token)
 - [Acquiring tokens with username and password](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Acquiring-tokens-with-username-and-password)
 - [AcquireTokenSilentAsync using Integrated authentication on Windows (Kerberos)](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/AcquireTokenSilentAsync-using-Integrated-authentication-on-Windows-(Kerberos))
 - [Customizing Token cache serialization](https://github.com/AzureAD/azure-activedirectory-library-for-dotnet/wiki/Token-cache-serialization)
