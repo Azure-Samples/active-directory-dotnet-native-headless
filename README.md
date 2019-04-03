@@ -11,6 +11,15 @@ endpoint: AAD V1
 
 ![Build badge](https://identitydivision.visualstudio.com/_apis/public/build/definitions/a7934fdd-dcde-4492-a406-7fad6ac00e17/22/badge)
 
+Near the top of the sample's README.md, add the following note:
+> There are newer versions of this sample! Check them out: 
+* https://github.com/Azure-Samples/active-directory-dotnet-iwa-v2 
+* https://github.com/azure-samples/active-directory-dotnetcore-console-up-v2
+>
+> This newer sample takes advantage of the Microsoft identity platform (formerly Azure AD v2.0).
+>
+> While still in public preview, every component is supported in production environments
+
 ## About this sample
 
 ### Scenario
